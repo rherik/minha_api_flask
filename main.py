@@ -5,13 +5,10 @@ from time import sleep
 
 
 class MeuTwitter:
-    def __init__(self, api, user, mensagem):
+    def __init__(self, api, user="saobrisinha", mensagem='Teste padrão'):
         self.api = api
         self.user = user
-        if mensagem == '' or mensagem == ' ':
-            print("Tweet sem texto. Impossível executar.")
-        else:
-            self.message = mensagem
+        self.message = mensagem
 
     def twita(self, image_path=None):
         try:
@@ -26,7 +23,6 @@ class MeuTwitter:
     def delete_tweet(self):
         try:
             tweets = self.api.user_timeline()  # Obtém os últimos 20 tweets do usuário
-            print(len(tweets))
             for tweet in tweets:
                 if tweet.text == self.message:
                     tweet_id = tweet.id_str                
@@ -36,9 +32,23 @@ class MeuTwitter:
         except Exception as e:
             print(f"Não foi possível deletar o tweet: ~{tweet.text}~ Erro: {e}")
 
+    def show_tt_terminal(self, home=False):
+        if home == False: 
+            user_tweets = self.api.user_timeline(screen_name=self.user, count=100, tweet_mode='extended')          
+            print(f"O total de tweets é: {len(user_tweets)}")
+            for tweet in user_tweets:
+                sleep(5)
+                print(tweet.full_text, tweet.created_at.date())
+        else:
+            home_user_tweets = self.api.home_timeline(count=1, tweet_mode='extended')   
+            print(f"O total de tweets é: {len(home_user_tweets)}")
+            for tweet in home_user_tweets:
+                sleep(5)
+                print(tweet.user.screen_name," - ", tweet.full_text, tweet.created_at.date())
+
+
     def twita_and_delete(self):
-        user_tweets = tweepy.Cursor(
-            self.api.user_timeline, self.screen_name, count=100, tweet_mode='extended').items(10)            
+        user_tweets = tweepy.Cursor(self.api.user_timeline, self.screen_name, count=100, tweet_mode='extended')          
         for n in range(5):
             sleep(1)
             self.twita(api, f"{self.message} {n+1}º")
@@ -46,10 +56,11 @@ class MeuTwitter:
         sleep(10)
         for tweet in user_tweets:
             if self.message in tweet.full_text:
+                #reforçar medida de segurança. Implementar Try e Loop
                 certeza = input(
                     f"O tweet ~{tweet.full_text}~ será excluído. Tem certeza que deseja excluí-lo?(s/n)")
                 sleep(1)
-                if certeza == n:
+                if certeza == n or certeza == '':
                     print(f"{tweet.full_text} mantido na sua conta.")
                 else:
                     self.delete_tweet(api, tweet_id=tweet.id,
@@ -57,6 +68,7 @@ class MeuTwitter:
                     print(f"{tweet.full_text} excluido.")
 
     # USO DO ARQUIVO CSV:
+    # Dar ao nome do arquivo o nome do usuário
     def saves_user_tweets(self, limit, termo=None):
         tweets = tweepy.Cursor(self.api.user_timeline, screen_name=self.user,
                                count=100, tweet_mode='extended').items(limit)
@@ -74,9 +86,8 @@ class MeuTwitter:
         df = pd.DataFrame(data, columns=columns)
         return df
 
-    def get_hastags(self, api: tweepy.API, keyword, limit):
-        tweets = tweepy.Cursor(api.search_tweets, q=keyword,
-                               count=100, tweet_mode='extended').items(limit)
+    def get_hastags(self, keyword, limit):
+        tweets = tweepy.Cursor(api.search_tweets, q=keyword, count=100, tweet_mode='extended').items(limit)
         columns = [' User ', '   Tweet ']
         data = []
         for tweet in tweets:
@@ -84,12 +95,11 @@ class MeuTwitter:
         df = pd.DataFrame(data, columns=columns)
         return df
 
-    def save_csv(self, dados):
+    def save_csv(self, user, dados):
     # save_csv(get_user_tweets(api, 'saobrisinha', 10))
-
         dados.to_csv('tweets.csv')
 
-    def show_tweets_in_file(self):
+    def show_tweets_in_file(self, user):
         with open('tweets.csv', 'r') as file:
             for n in file:
                 print(n)
@@ -106,5 +116,5 @@ if __name__ == '__main__':
         return tweepy.API(auth)
 
     api_herik = api()
-    herik = MeuTwitter(api_herik, "saobrisinha", "Testando classes")
-    herik.delete_tweet()
+    herik = MeuTwitter(api_herik, "saobrisinha")
+    herik.show_tt_terminal(home=True)
