@@ -38,15 +38,15 @@ class MeuTwitter:
         if home == False: 
             user_tweets = self.api.user_timeline(screen_name=self.user, count=num, tweet_mode='extended')          
             user_info = self.api.get_user(screen_name=self.user)
-            print(f"O total de tweets é: {len(user_tweets)}. Do usuário: {user_info.screen_name}, followers: {user_info.followers_count}\n")
+            print(f"O total de tweets é: {len(user_tweets)}. Do usuário: {user_info.screen_name}, Followers: {user_info.followers_count}, \ndescrição: {user_info.description}\n")
             for tweet in user_tweets:
                 sleep(5)
                 tweet_id = tweet.id_str
-                print("Data: ", tweet.created_at.date().strftime("%d/%m/%Y"), f"Id = {tweet_id}\n", tweet.full_text)
+                print("Tweet:", tweet.full_text,"\n", "Data:", tweet.created_at.date().strftime("%d/%m/%Y"), f"Id = {tweet_id}\n\n")
         else:
             home_user_tweets = self.api.home_timeline(count=num, tweet_mode='extended')   
             user_info = self.api.get_user(screen_name=self.user)
-            print(f"O total de tweets é: {len(home_user_tweets)}. Que o usuário {user_info.screen_name} segue, followers: {user_info.followers_count}\n")
+            print(f"O total de tweets é: {len(home_user_tweets)}. Que o usuário {user_info.screen_name} segue. Followers: {user_info.followers_count}, \ndescrição: {user_info.description}\n")
             for tweet in home_user_tweets:
                 sleep(5)
                 tweet_id = tweet.id_str
@@ -122,4 +122,4 @@ if __name__ == '__main__':
 
     api_herik = api()
     herik = MeuTwitter(api_herik, "saobrisinha")
-    herik.tweets_terminal()
+    herik.tweets_terminal(home=True)
