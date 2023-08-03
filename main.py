@@ -2,6 +2,7 @@ import tweepy
 import configparser
 import pandas as pd
 from time import sleep
+from datetime import datetime
 
 
 class MeuTwitter:
@@ -10,7 +11,7 @@ class MeuTwitter:
         self.user = user
         self.message = mensagem
 
-    def twita(self, image_path=None):
+    def twite(self, image_path=None):
         try:
             if image_path:
                 self.api.update_status_with_media(self.message, image_path)
@@ -20,52 +21,58 @@ class MeuTwitter:
         except Exception as e:
             print(f"Erro {e} ao postar tweet.")
 
-    def delete_tweet(self):
+    def delete_tweet(self, num=1):
         try:
-            tweets = self.api.user_timeline()  # Obtém os últimos 20 tweets do usuário
+            tweets = self.api.user_timeline(count=num)
             for tweet in tweets:
                 if tweet.text == self.message:
-                    tweet_id = tweet.id_str                
+                    tweet_id = tweet.id_str   
+                    print(tweet_id)             
                     self.api.destroy_status(tweet_id)
-                    print(f"Tweet deletado: {tweet.text}")
+                    print(f"Tweet deletado: {tweet.text} - {tweet_id}")
                     break
         except Exception as e:
             print(f"Não foi possível deletar o tweet: ~{tweet.text}~ Erro: {e}")
 
-    def show_tt_terminal(self, home=False):
+    def tweets_terminal(self, home=False, num=10):
         if home == False: 
-            user_tweets = self.api.user_timeline(screen_name=self.user, count=100, tweet_mode='extended')          
-            print(f"O total de tweets é: {len(user_tweets)}")
+            user_tweets = self.api.user_timeline(screen_name=self.user, count=num, tweet_mode='extended')          
+            user_info = self.api.get_user(screen_name=self.user)
+            print(f"O total de tweets é: {len(user_tweets)}. Do usuário: {user_info.screen_name}, followers: {user_info.followers_count}\n")
             for tweet in user_tweets:
                 sleep(5)
-                print(tweet.full_text, tweet.created_at.date())
+                tweet_id = tweet.id_str
+                print("Data: ", tweet.created_at.date().strftime("%d/%m/%Y"), f"Id = {tweet_id}\n", tweet.full_text)
         else:
-            home_user_tweets = self.api.home_timeline(count=1, tweet_mode='extended')   
-            print(f"O total de tweets é: {len(home_user_tweets)}")
+            home_user_tweets = self.api.home_timeline(count=num, tweet_mode='extended')   
+            user_info = self.api.get_user(screen_name=self.user)
+            print(f"O total de tweets é: {len(home_user_tweets)}. Que o usuário {user_info.screen_name} segue, followers: {user_info.followers_count}\n")
             for tweet in home_user_tweets:
                 sleep(5)
-                print(tweet.user.screen_name," - ", tweet.full_text, tweet.created_at.date())
+                tweet_id = tweet.id_str
+                print("User:", tweet.user.screen_name,"\n", "Tweet:", tweet.full_text,"\n", "Data:", tweet.created_at.date().strftime("%d/%m/%Y"), f"Id = {tweet_id}\n\n")
 
 
-    def twita_and_delete(self):
-        user_tweets = tweepy.Cursor(self.api.user_timeline, self.screen_name, count=100, tweet_mode='extended')          
-        for n in range(5):
+    def twite_and_delete(self, delete=False, num=5):
+        user_tweets = tweepy.Cursor(self.api.user_timeline, self.screen_name)          
+        for n in range(num):
             sleep(1)
             self.twita(api, f"{self.message} {n+1}º")
 
-        sleep(10)
-        for tweet in user_tweets:
-            if self.message in tweet.full_text:
-                #reforçar medida de segurança. Implementar Try e Loop
-                certeza = input(
-                    f"O tweet ~{tweet.full_text}~ será excluído. Tem certeza que deseja excluí-lo?(s/n)")
-                sleep(1)
-                if certeza == n or certeza == '':
-                    print(f"{tweet.full_text} mantido na sua conta.")
-                else:
-                    self.delete_tweet(api, tweet_id=tweet.id,
-                                 tweet_text=tweet.full_text)
-                    print(f"{tweet.full_text} excluido.")
+        if delete == True:
+            sleep(10)
+            for tweet in user_tweets:
+                if self.message in tweet.full_text:
+                    #reforçar medida de segurança. Implementar Try e Loop
+                    certeza = input(
+                        f"O tweet ~{tweet.full_text}~ será excluído. Tem certeza que deseja excluí-lo?(s/n)")
+                    sleep(1)
+                    if certeza == n or certeza == '':
+                        print(f"{tweet.full_text} mantido na sua conta.")
+                    else:
+                        self.delete_tweet(api, tweet_id=tweet.id,
+                                    tweet_text=tweet.full_text)
+                        print(f"{tweet.full_text} excluido.")
 
     # USO DO ARQUIVO CSV:
     # Dar ao nome do arquivo o nome do usuário
@@ -86,8 +93,8 @@ class MeuTwitter:
         df = pd.DataFrame(data, columns=columns)
         return df
 
-    def get_hastags(self, keyword, limit):
-        tweets = tweepy.Cursor(api.search_tweets, q=keyword, count=100, tweet_mode='extended').items(limit)
+    def get_hastags(self, keyword):
+        tweets = tweepy.Cursor(api.search_tweets, q=keyword, count=100, tweet_mode='extended')
         columns = [' User ', '   Tweet ']
         data = []
         for tweet in tweets:
@@ -109,12 +116,10 @@ if __name__ == '__main__':
     def api():
         config = configparser.ConfigParser()
         config.read('twikeys.ini')
-        auth = tweepy.OAuthHandler(
-            config['twitter']['api_key'], config['twitter']['api_key_secret'])
-        auth.set_access_token(
-            config['twitter']['access_token'], config['twitter']['access_token_secret'])
+        auth = tweepy.OAuthHandler(config['twitter']['api_key'], config['twitter']['api_key_secret'])
+        auth.set_access_token(config['twitter']['access_token'], config['twitter']['access_token_secret'])
         return tweepy.API(auth)
 
     api_herik = api()
     herik = MeuTwitter(api_herik, "saobrisinha")
-    herik.show_tt_terminal(home=True)
+    herik.tweets_terminal()

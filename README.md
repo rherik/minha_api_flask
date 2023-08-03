@@ -1,7 +1,10 @@
 <h1>Tarefas:</h1>
 <ul>
+    <li>Implementar get_hastags para o método tweets_terminal</li>
     <li>Função para ler e twitar cada linha de um arquivo txt</li>
+    <li>Implementar SQL</li>
     <li>Refatorar método twita_and_delete</li>
+    <li>Refatorar métodos csv</li>
     <li>Descobrir uma api de imagens(https://docs.bruzu.com/)</li>
     <li>Limitador de enter ao excluir tweet</li>
     <li>Documentar e comentar</li>
