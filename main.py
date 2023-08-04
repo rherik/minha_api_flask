@@ -54,10 +54,12 @@ class MeuTwitter:
 
 
     def twite_and_delete(self, delete=False, num=5):
-        user_tweets = tweepy.Cursor(self.api.user_timeline, self.screen_name)          
+        user_tweets = tweepy.Cursor(self.api.user_timeline, screen_name=self.user)          
         for n in range(num):
             sleep(1)
-            self.twita(api, f"{self.message} {n+1}º")
+            # Sobreescrever self.message ou atribuir como parametro do metodo
+            self.message = f"{self.message} {n+1}º"
+            self.twite(self.message)
 
         if delete == True:
             sleep(10)
@@ -67,6 +69,7 @@ class MeuTwitter:
                     certeza = input(
                         f"O tweet ~{tweet.full_text}~ será excluído. Tem certeza que deseja excluí-lo?(s/n)")
                     sleep(1)
+                    #Laço for para ter certeza de cada tweet
                     if certeza == n or certeza == '':
                         print(f"{tweet.full_text} mantido na sua conta.")
                     else:
@@ -121,5 +124,6 @@ if __name__ == '__main__':
         return tweepy.API(auth)
 
     api_herik = api()
-    herik = MeuTwitter(api_herik, "saobrisinha")
-    herik.tweets_terminal(home=True)
+    herik = MeuTwitter(api_herik, "saobrisinha", mensagem="Teste pra Jhovanna")
+    herik.tweets_terminal()
+    #herik.twite_and_delete(delete=True, num=11)
