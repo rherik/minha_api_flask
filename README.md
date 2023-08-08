@@ -23,3 +23,8 @@
     <li>pip install tweepy --upgrade</li>
     <li>pip show tweepy</li>
 </ul>
+<h3>Materiais:</h3>
+<ul>
+    <li>Para trending topics: hhttps://www.geeksforgeeks.org/python-api-trends_place-in-tweepy/</li>
+    <li>Tweets em tempo real: https://medium.com/gabifernandesc/captura-de-dados-tweets-em-tempo-real-com-python-b324dedf1bc4</li>
+</ul>
