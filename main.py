@@ -6,18 +6,17 @@ from datetime import datetime
 
 
 class MeuTwitter:
-    def __init__(self, api, user="saobrisinha", mensagem='Teste padrão'):
+    def __init__(self, api, user="saobrisinha"):
         self.api = api
         self.user = user
-        self.message = mensagem
 
-    def twite(self, image_path=None):
+    def twite(self, message="Teste padrão", image_path=None):
         try:
             if image_path:
-                self.api.update_status_with_media(self.message, image_path)
+                self.api.update_status_with_media(message, image_path)
             else:
-                self.api.update_status(self.message)
-                print(f"~{self.message}~ twittado com sucesso!")
+                self.api.update_status(message)
+                print(f"~{message}~ twittado com sucesso!")
         except Exception as e:
             print(f"Erro {e} ao postar tweet.")
 
@@ -37,8 +36,8 @@ class MeuTwitter:
     def tweets_terminal(self, home=False, num=10):
         if home == False: 
             user_tweets = self.api.user_timeline(screen_name=self.user, count=num, tweet_mode='extended')          
-            user_info = self.api.get_user(screen_name=self.user)
-            print(f"O total de tweets é: {len(user_tweets)}. Do usuário: {user_info.screen_name}, Followers: {user_info.followers_count}, \ndescrição: {user_info.description}\n")
+            #user_info = self.api.get_user(screen_name=self.user)
+            #print(f"O total de tweets é: {len(user_tweets)}. Do usuário: {user_info.screen_name}, Followers: {user_info.followers_count}, \ndescrição: {user_info.description}\n")
             for tweet in user_tweets:
                 sleep(5)
                 tweet_id = tweet.id_str
@@ -52,7 +51,7 @@ class MeuTwitter:
                 tweet_id = tweet.id_str
                 print("User:", tweet.user.screen_name,"\n", "Tweet:", tweet.full_text,"\n", "Data:", tweet.created_at.date().strftime("%d/%m/%Y"), f"Id = {tweet_id}\n\n")
 
-
+    # REFATORAR E TESTAR!!
     def twite_and_delete(self, delete=False, num=5):
         user_tweets = tweepy.Cursor(self.api.user_timeline, screen_name=self.user)          
         for n in range(num):
@@ -77,6 +76,23 @@ class MeuTwitter:
                                     tweet_text=tweet.full_text)
                         print(f"{tweet.full_text} excluido.")
 
+    def get_for_topic(self, termo='Rio de Janeiro'):
+        trend_topics = self.api.search_tweets(q=termo, count=10, tweet_mode='extended')
+        for tweet in trend_topics:
+            sleep(2)
+            tweet_data = tweet.created_at.date().strftime("%d/%m/%Y")
+            print("User:", tweet.user.screen_name,"\n", "Tweet:", tweet.full_text,"\n", "Data:", tweet_data, "\n\n")
+
+
+    def get_trending_topics(self):
+            woeid = 455825 #id Brasil
+            print("As top trends na sua localização:")    
+            trends = api.get_place_trends(id = woeid, exclude = 'hashtags')
+            for value in trends:
+                for trend in value['trends']:
+                    sleep(1)
+                    print(trend['name'], ", ","Tweet volume:", trend['tweet_volume'])
+
     # USO DO ARQUIVO CSV:
     # Dar ao nome do arquivo o nome do usuário
     def saves_user_tweets(self, limit, termo=None):
@@ -96,7 +112,7 @@ class MeuTwitter:
         df = pd.DataFrame(data, columns=columns)
         return df
 
-    def get_hastags(self, keyword):
+    def _get_trending_topics(self, keyword):
         tweets = tweepy.Cursor(api.search_tweets, q=keyword, count=100, tweet_mode='extended')
         columns = [' User ', '   Tweet ']
         data = []
@@ -122,8 +138,7 @@ if __name__ == '__main__':
         auth = tweepy.OAuthHandler(config['twitter']['api_key'], config['twitter']['api_key_secret'])
         auth.set_access_token(config['twitter']['access_token'], config['twitter']['access_token_secret'])
         return tweepy.API(auth)
-
-    api_herik = api()
-    herik = MeuTwitter(api_herik, "saobrisinha", mensagem="Autenticação")
-    herik.twite()
-    #herik.twite_and_delete(delete=True, num=11)
+        
+    api = api()
+    herik = MeuTwitter(api=api)
+    herik.tweets_terminal()
