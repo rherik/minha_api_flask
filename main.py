@@ -118,12 +118,12 @@ class MeuTwitter:
 if __name__ == '__main__':
     def api():
         config = configparser.ConfigParser()
-        config.read('twikeys.ini')
+        config.read('h_twikeys.ini')
         auth = tweepy.OAuthHandler(config['twitter']['api_key'], config['twitter']['api_key_secret'])
         auth.set_access_token(config['twitter']['access_token'], config['twitter']['access_token_secret'])
         return tweepy.API(auth)
 
     api_herik = api()
-    herik = MeuTwitter(api_herik, "saobrisinha", mensagem="Teste pra Jhovanna")
-    herik.tweets_terminal()
+    herik = MeuTwitter(api_herik, "saobrisinha", mensagem="Autenticação")
+    herik.twite()
     #herik.twite_and_delete(delete=True, num=11)
