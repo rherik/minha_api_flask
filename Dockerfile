@@ -4,6 +4,6 @@ WORKDIR /penTweepy
 
 COPY . .
 
-RUN pip install tweepy pandas
+RUN pip install Flask
 
-CMD ["python", "main.py"]
+CMD ["python", "run.py"]
