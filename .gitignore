@@ -2,4 +2,5 @@ tweets.csv
 h_twikeys.ini
 tests.py
 venv
-imgs
+h_twikeys.ini
+.vscode
