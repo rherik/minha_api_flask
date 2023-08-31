@@ -19,6 +19,9 @@
     <li>pip install Flask</li>
 </ul>
 
+<h3>Rodar imagem docker na porta certa:</h3>
+<p>docker run -p 5005:5000 nome-da-imagem</p>
+
 <h3>Materiais:</h3>
 <ul>
     <li>Apoio com flask api: https://medium.com/@hedgarbezerra35/api-rest-com-flask-autenticacao-25d99b8679b6</li>

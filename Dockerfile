@@ -1,9 +1,11 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
-WORKDIR /penTweepy
+EXPOSE 5000
+
+WORKDIR /app
 
 COPY . .
 
 RUN pip install Flask
 
-CMD ["python", "run.py"]
+CMD ["flask", "run", "--host", "0.0.0.0"]
