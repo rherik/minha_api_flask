@@ -16,11 +16,9 @@
 
 <h3>Comandos:</h3>
 <ul>
-    <li>pip install Flask</li>
+    <li>docker build -t nome_da_imagem .</li>
+    <li>docker run -ip 5000:5000 -w /app -v "$(pwd):/app" nome_da_imagem</li>
 </ul>
-
-<h3>Rodar imagem docker na porta certa:</h3>
-<p>docker run -p 5005:5000 nome-da-imagem</p>
 
 <h3>Materiais:</h3>
 <ul>
