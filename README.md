@@ -24,3 +24,7 @@
     <li>Vídeo de apoio: https://www.youtube.com/watch?v=LP8besicfH4&t=2s&ab_channel=PycodeBR</li>
     <li>Documentação Twitter: https://developer.twitter.com/en/docs/twitter-api/migrate/twitter-api-endpoint-map</li>
 </ul>
+<h3>Observações:</h3>
+<ul>
+    <li>Adicionar jwt claims se quiser funções de admin</li>
+</ul>
