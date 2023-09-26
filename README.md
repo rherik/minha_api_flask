@@ -1,6 +1,7 @@
 <h1>Tarefas:</h1>
 
 <ul>
+    <li>Add fresh and refresh token to be requested on methods</li>
 </ul>
 
 <h3>Testar:</h3>
