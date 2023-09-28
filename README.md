@@ -12,10 +12,10 @@
 <ul>
 </ul>
 
-<h3>Comandos:</h3>
+<h3>Comandos docker local:</h3>
 <ul>
     <li>docker build -t nome_da_imagem .</li>
-    <li>docker run -ip 5000:5000 -w /app -v "$(pwd):/app" nome_da_imagem</li>
+    <li>docker run -ip 5000:5000 -w /app -v "$(pwd):/app" nome_da_imagem sh -c "flask run --host 0.0.0.0"</li>
 </ul>
 
 <h3>Materiais:</h3>
