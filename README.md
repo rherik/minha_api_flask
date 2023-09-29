@@ -18,6 +18,11 @@
     <li>docker run -ip 5000:5000 -w /app -v "$(pwd):/app" nome_da_imagem sh -c "flask run --host 0.0.0.0"</li>
 </ul>
 
+<h3>Comando gunicorn localmente:</h3>
+<ul>
+    <li>gunicorn -w 4 'app:create_app()'</li>
+</ul>
+
 <h3>Materiais:</h3>
 <ul>
     <li>Documentação blueprint: https://flask.palletsprojects.com/en/2.3.x/blueprints/</li>
