@@ -26,15 +26,22 @@ def send_simple_message(to, subject, body):
 class UserRegister(MethodView):
     @blp.arguments(UserSchema)
     def post(self, user_data):
-        if UserModel.query.filter(UserModel.username == user_data["username"]).first():
-            abort(409, message="A user with that username already exists.")
+        if UserModel.query.filter(UserModel.email == user_data["email"]).first():
+            abort(409, message="A user with that email already exists.")
 
         user = UserModel(
-            username=user_data["username"],
+            email=user_data["email"],
             password=pbkdf2_sha256.hash(user_data["password"]) 
         )
         db.session.add(user)
         db.session.commit()
+
+        send_simple_message(
+            to=user.email,
+            subject="Successfully signed up",
+            body=f"Hi {user.email} You have successfully signed up to the Stores Rest API"
+        )
+
         return {"message": "User created successfully."}, 201
     
 @blp.route("/login")
@@ -42,7 +49,7 @@ class UserLogin(MethodView):
     @blp.arguments(UserSchema)
     def post(self, user_data):
         user = UserModel.query.filter(
-            UserModel.username == user_data["username"]
+            UserModel.email == user_data["email"]
         ).first()
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             access_token = create_access_token(identity=user.id, fresh=True)
