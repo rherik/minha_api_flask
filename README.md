@@ -17,6 +17,12 @@
     <li>docker build -t nome_da_imagem .</li>
     <li>docker run -ip 5000:5000 -w /app -v "$(pwd):/app" nome_da_imagem sh -c "flask run --host 0.0.0.0"</li>
 </ul>
+<h3>Comandos docker queue:</h3>
+<ul>
+    <li>docker build -t flask_api .</li>
+    <li>docker run -w /app flask_api sh -c "rq worker -u rediss://red-ckev9amnpffc73e2hf7g:37iQ930xK46vEnNMWevWBqyL6YOHBvtm@oregon-redis.render.com:6379 emails"</li>
+    <li>docker run -p 5000:80 flask_api</li>
+</ul>
 
 <h3>Comando gunicorn localmente:</h3>
 <ul>
